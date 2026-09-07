@@ -83,9 +83,46 @@ All Skills require a deployed CT environment for their product-backed actions an
 
 ## Product-backed workflow
 
-DVERA works with a deployed CT and DVERA environment. This repository documents the verification workflow, but does not include the CT runtime, product installation, or direct product integration.
+DVERA works with a deployed CT and DVERA environment. This repository documents the verification workflow and ships an MCP server that forwards tool calls to a local CT installation, but does not include the CT runtime or product installation.
 
 Without the deployed environment, users can inspect this repository's documented workflow, but a Skill that needs CT actions stops at its installation check. It must not claim that CT analysis, execution, coverage measurement, or reporting has occurred.
+
+## MCP tools
+
+Give the agent CT's verification tools directly. With the MCP server
+(`scripts/dvera-mcp.py`) connected, it can create the project, run analysis, generate and
+execute tests, and read coverage back without leaving the conversation - the same tools CT
+exposes to its own agent. Calls go to CT's `ct_tool.py` entry point, and the server keeps no
+process of its own between them.
+
+Connect it in one of two ways.
+
+**Point an MCP client at the interpreter CT already ships** - no extra install:
+
+```json
+{
+  "mcpServers": {
+    "dvera": {
+      "command": "C:/Program Files/Suresoft/CT 2026/python/python.exe",
+      "args": ["/path/to/dvera-plugin/scripts/dvera-mcp.py"]
+    }
+  }
+}
+```
+
+On Linux the interpreter is at `<CT install>/python/python3`. Any Python 3.8 or later works
+if you would rather use your own. Replace the script path with wherever this repository
+sits: clone it, or use the copy the plugin manager installed (`claude plugin list` shows
+where plugins live). The server takes the source directory from the client's working
+directory, so run the client from the project you want to verify.
+
+**Or install the bundle** from this repository's releases: download `dvera-mcp.mcpb` and
+open it with a client that installs MCP bundles. It resolves its own Python, so nothing has
+to be installed first.
+
+Set `CT_HOME` if CT is installed outside the default location. The server is safe to leave
+configured on any machine: it starts either way and simply offers no tools until CT is
+there.
 
 ## Requirements for product-backed verification
 
@@ -98,6 +135,6 @@ For a product demo, purchase, or deployment consultation, contact [bizcenter@sur
 
 ## License and trademarks
 
-This repository is licensed under the [MIT License](LICENSE). The license covers only the documentation and Skill files in this repository. CT and DVERA are Suresoft Technologies products; product functionality and product licensing are not granted by this repository.
+This repository is licensed under the [MIT License](LICENSE). The license covers everything in this repository - the documentation, the Skill files, and the MCP server source. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.
 
 GoogleTest is a trademark of Google LLC. This repository is not affiliated with, sponsored by, or endorsed by Google. Other product names may be trademarks of their respective owners.
