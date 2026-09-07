@@ -1,0 +1,20 @@
+# The MCP bundle carries only the server. Skills, docs and plugin metadata
+# belong to the Claude Code plugin, not to this bundle.
+skills/
+.claude-plugin/
+RELEASING.md
+server.json
+README.ko.md
+.gitignore
+.gitattributes
+.git/
+__pycache__/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+uv.lock
+*.py[cod]
+*.mcpb

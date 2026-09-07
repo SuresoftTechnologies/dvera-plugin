@@ -1,0 +1,43 @@
+{
+  "manifest_version": "0.4",
+  "name": "dvera-mcp",
+  "display_name": "DVERA CT verification tools",
+  "version": "0.1.0",
+  "description": "Exposes CT's C/C++ verification tools - project setup, analysis, test generation and execution, coverage, reporting - to an MCP client. Requires a local CT 2026.06 or later installation; without one the server reports zero tools.",
+  "author": {
+    "name": "Suresoft Technologies",
+    "email": "bizcenter@suresofttech.com",
+    "url": "https://www.suresofttech.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SuresoftTechnologies/dvera-plugin"
+  },
+  "homepage": "https://github.com/SuresoftTechnologies/dvera-plugin",
+  "license": "MIT",
+  "keywords": [
+    "ct",
+    "c",
+    "cpp",
+    "embedded",
+    "unit-testing",
+    "code-coverage",
+    "mcdc",
+    "test-automation"
+  ],
+  "server": {
+    "type": "uv",
+    "entry_point": "scripts/dvera-mcp.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": ["run", "--project", "${__dirname}",
+               "${__dirname}/scripts/dvera-mcp.py"]
+    }
+  },
+  "compatibility": {
+    "platforms": ["win32", "linux"],
+    "runtimes": {
+      "python": ">=3.8"
+    }
+  }
+}

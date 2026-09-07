@@ -22,6 +22,9 @@ build/
 .pytest_cache/
 uv.lock
 
+# Built MCP bundles - released as GitHub release assets, not committed
+*.mcpb
+
 # OS artifacts
 .DS_Store
 Thumbs.db

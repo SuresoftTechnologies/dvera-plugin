@@ -1,0 +1,9 @@
+[project]
+name = "dvera-mcp"
+version = "0.1.0"
+description = "MCP server exposing CT's C/C++ verification tools"
+requires-python = ">=3.8"
+# No third-party dependencies on purpose: the server speaks JSON-RPC over
+# stdio directly and reaches CT through its own command-line entry point, so
+# it runs on a bare interpreter with nothing to install.
+dependencies = []
