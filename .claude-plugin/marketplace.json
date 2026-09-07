@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "dvera",
-      "description": "Connect AI coding-agent context to Controller Tester (CT) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
+      "description": "Connect AI coding-agent context to CT (Controller Tester) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
       "source": "./",
       "version": "0.1.0",
       "category": "testing",
@@ -27,7 +27,7 @@
         "test-generation",
         "code-coverage",
         "mcdc",
-        "safety-critical",
+        "mission-critical",
         "requirements-traceability",
         "regression-testing",
         "googletest",

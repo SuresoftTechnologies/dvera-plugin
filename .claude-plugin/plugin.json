@@ -1,7 +1,7 @@
 {
   "name": "dvera",
   "version": "0.1.0",
-  "description": "Connect AI coding-agent context to Controller Tester (CT) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
+  "description": "Connect AI coding-agent context to CT (Controller Tester) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
   "author": {
     "name": "Suresoft Technologies",
     "email": "bizcenter@suresofttech.com",
@@ -10,5 +10,5 @@
   "repository": "https://github.com/SuresoftTechnologies/dvera-plugin",
   "homepage": "https://github.com/SuresoftTechnologies/dvera-plugin",
   "license": "MIT",
-  "keywords": ["dvera", "ct", "controller-tester", "suresoft", "c", "cpp", "embedded", "unit-testing", "integration-testing", "test-automation", "test-generation", "code-coverage", "mcdc", "safety-critical", "requirements-traceability", "regression-testing", "googletest", "iso-26262", "do-178c", "en-50128"]
+  "keywords": ["dvera", "ct", "controller-tester", "suresoft", "c", "cpp", "embedded", "unit-testing", "integration-testing", "test-automation", "test-generation", "code-coverage", "mcdc", "mission-critical", "requirements-traceability", "regression-testing", "googletest", "iso-26262", "do-178c", "en-50128"]
 }
