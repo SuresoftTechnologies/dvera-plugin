@@ -200,16 +200,73 @@ def validate_arguments(schema, arguments):
     return None
 
 
+# Titles and consent hints live in resources/tool-annotations.json, not here, so
+# they can be corrected without touching this file - and so they can be dropped
+# entirely once CT's own catalog carries them.
+_ANNOTATIONS_FILE = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "resources", "tool-annotations.json")
+
+_DEFAULT_READ_ONLY_PREFIXES = ("ct_get_", "ct_list_", "ct_find_")
+
+
+def load_annotation_table():
+    """Read the fallback titles and read-only prefixes, or sensible defaults."""
+    try:
+        with open(_ANNOTATIONS_FILE, encoding="utf-8") as fh:
+            data = json.load(fh)
+        prefixes = tuple(data.get("readOnlyPrefixes") or _DEFAULT_READ_ONLY_PREFIXES)
+        titles = data.get("titles") or {}
+        if not isinstance(titles, dict):
+            raise ValueError("titles must be an object")
+        return {"prefixes": prefixes, "titles": titles}
+    except (OSError, ValueError):
+        # Missing or malformed: fall back to naming rules rather than shipping
+        # tools with no annotations at all.
+        return {"prefixes": _DEFAULT_READ_ONLY_PREFIXES, "titles": {}}
+
+
+def _derive_title(name):
+    words = name[3:].replace("_", " ") if name.startswith("ct_") else name.replace("_", " ")
+    return words[:1].upper() + words[1:]
+
+
+def annotate(name, spec, table):
+    """Title and consent hint for one tool.
+
+    What the catalog itself declares wins. Only where CT says nothing do the
+    values in resources/tool-annotations.json apply, and only where that file
+    says nothing is the hint decided by the tool's name.
+    """
+    title = spec.get("title") or table["titles"].get(name) or _derive_title(name)
+    ann = {"title": title}
+    if "readOnlyHint" in spec or "destructiveHint" in spec:
+        for hint in ("readOnlyHint", "destructiveHint"):
+            if hint in spec:
+                ann[hint] = spec[hint]
+    elif name.startswith(table["prefixes"]):
+        ann["readOnlyHint"] = True
+    else:
+        ann["destructiveHint"] = True
+    return ann
+
+
 def load_tools(bundle):
     """Build the MCP tool list from the bundle's catalog resource."""
     path = os.path.join(bundle, "resources", "mcp-tools.json")
     with open(path, encoding="utf-8") as fh:
         catalog = json.load(fh)
     _validate_catalog(catalog)
-    return [{"name": name,
-             "description": spec.get("description", ""),
-             "inputSchema": _to_json_schema(spec)}
-            for name, spec in catalog.items()]
+    table = load_annotation_table()
+    tools = []
+    for name, spec in catalog.items():
+        ann = annotate(name, spec, table)
+        tools.append({"name": name,
+                      "title": ann["title"],
+                      "description": spec.get("description", ""),
+                      "inputSchema": _to_json_schema(spec),
+                      "annotations": ann})
+    return tools
 
 
 # --------------------------------------------------------------------------

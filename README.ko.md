@@ -130,6 +130,23 @@ CT를 기본 경로 밖에 설치했다면 `CT_HOME`을 설정해 주세요. 어
 
 제품 데모, 구매 또는 구축 상담은 [bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com)으로 문의해 주세요.
 
+## 개인정보 처리
+
+이 저장소의 MCP 서버는 전적으로 사용자 PC에서 동작합니다.
+
+- Suresoft Technologies를 포함해 어디에도 데이터를 전송하지 않습니다. 자체 텔레메트리·분석·네트워크
+  호출이 없습니다.
+- 도구 인자는 같은 PC에 설치된 CT로 전달되고, CT의 응답이 MCP 클라이언트로 돌아갑니다. CT 자체
+  워크스페이스 밖에는 아무것도 기록하지 않습니다.
+- 자격증명을 저장하지 않으며, CT 설치 디렉터리와 도구 호출이 지정한 경로 외의 파일을 읽지 않습니다.
+- CT가 자체적으로 남기는 것(워크스페이스, 분석 산출물, 보고서)은 이 저장소가 아니라 CT 제품의 데이터
+  처리 방침을 따릅니다.
+
+Skill은 문서이며, 사용자 PC에서 실행되는 코드를 포함하지 않습니다.
+
+전문은 [PRIVACY.md](PRIVACY.md)에 있습니다. CT 제품 자체의 데이터 처리에 대한 문의는
+[bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com)으로 주세요.
+
 ## 라이선스 및 상표
 
 이 저장소는 [MIT 라이선스](LICENSE)를 따릅니다. 라이선스는 이 저장소의 전부 — 문서, Skill 파일, MCP 서버 소스 — 에 적용됩니다. CT 자체에는 적용되지 않습니다. CT와 DVERA는 Suresoft Technologies의 제품이며, 이 저장소의 라이선스로 제품 기능이나 제품 라이선스가 제공되지는 않습니다.

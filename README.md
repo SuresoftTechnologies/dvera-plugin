@@ -133,6 +133,25 @@ there.
 
 For a product demo, purchase, or deployment consultation, contact [bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com).
 
+## Privacy
+
+The MCP server in this repository runs entirely on your machine.
+
+- It sends nothing to Suresoft Technologies or to any third party. There is no telemetry,
+  no analytics, and no network call of its own.
+- Tool arguments are passed to the CT installation on the same machine, and CT's response is
+  returned to your MCP client. Nothing is written outside CT's own workspace.
+- It stores no credentials and reads no files beyond the CT installation directory and the
+  paths a tool call names.
+- Anything CT itself records - workspaces, analysis output, reports - is governed by CT's own
+  handling of that data, not by this repository.
+
+The Skills are documentation: they carry no code that runs on your machine.
+
+The full policy is in [PRIVACY.md](PRIVACY.md). Questions about data handling in the CT
+product itself go to
+[bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com).
+
 ## License and trademarks
 
 This repository is licensed under the [MIT License](LICENSE). The license covers everything in this repository - the documentation, the Skill files, and the MCP server source. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.

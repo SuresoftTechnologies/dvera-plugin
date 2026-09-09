@@ -1,0 +1,41 @@
+{
+  "$comment": [
+    "Tool titles and consent hints for the tools CT exposes. The MCP directory",
+    "requires every tool to carry a title and either readOnlyHint or",
+    "destructiveHint; CT's own catalog does not carry them yet, so they are",
+    "supplied here.",
+    "",
+    "This file is a fallback, not an override. dvera-mcp.py prefers whatever the",
+    "installed CT's catalog declares, so once the product ships its own",
+    "annotations they win and this file can be deleted.",
+    "",
+    "readOnlyPrefixes decides consent for anything not listed in titles: a tool",
+    "whose name starts with one of them is read-only, everything else is treated",
+    "as destructive so the client asks before running it. A tool CT adds later",
+    "therefore errs toward asking."
+  ],
+  "readOnlyPrefixes": ["ct_get_", "ct_list_", "ct_find_"],
+  "titles": {
+    "ct_create_project": "Create CT project",
+    "ct_analyze": "Analyze project",
+    "ct_create_test": "Generate tests",
+    "ct_execute_test": "Run tests",
+    "ct_get_coverage": "Get coverage",
+    "ct_get_test_results": "Get test results",
+    "ct_get_functions": "List functions",
+    "ct_get_toolchain": "Get toolchain",
+    "ct_list_toolchains": "List toolchains",
+    "ct_list_host_toolchains": "List host toolchains",
+    "ct_create_toolchain": "Create toolchain",
+    "ct_modify_toolchain": "Modify toolchain",
+    "ct_get_project_settings": "Get project settings",
+    "ct_set_project_toolchain": "Set project toolchain",
+    "ct_set_compile_flags": "Set compile flags",
+    "ct_set_link_flags": "Set link flags",
+    "ct_find_functions": "Find functions",
+    "ct_ai_generate_test": "Generate test with AI",
+    "ct_get_env": "Get CT environment",
+    "ct_list_recent_workspaces": "List recent workspaces",
+    "ct_generate_report": "Export report"
+  }
+}

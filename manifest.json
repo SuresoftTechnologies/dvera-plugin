@@ -4,6 +4,7 @@
   "display_name": "DVERA CT verification tools",
   "version": "0.1.0",
   "description": "Exposes CT's C/C++ verification tools - project setup, analysis, test generation and execution, coverage, reporting - to an MCP client. Requires a local CT 2026.06 or later installation; without one the server reports zero tools.",
+  "long_description": "DVERA hands CT's C/C++ verification tools to an MCP client so the whole loop - creating the project, resolving the toolchain, running analysis, generating and executing tests, reviewing statement/branch/MC-DC coverage, and exporting reports - happens in one conversation.\n\nThe server reads the tool catalog shipped with the CT MCP bundle and forwards each call to CT's own command-line entry point. It keeps no process of its own between calls, and it does not bundle or modify any CT code.\n\nCT 2026.06 or later must be installed locally, with a valid licence; the tools act on that installation. Where CT is absent the server still starts and reports no tools, so it is safe to leave configured on any machine.",
   "author": {
     "name": "Suresoft Technologies",
     "email": "bizcenter@suresofttech.com",
@@ -14,6 +15,11 @@
     "url": "https://github.com/SuresoftTechnologies/dvera-plugin"
   },
   "homepage": "https://github.com/SuresoftTechnologies/dvera-plugin",
+  "documentation": "https://github.com/SuresoftTechnologies/dvera-plugin#mcp-tools",
+  "support": "https://github.com/SuresoftTechnologies/dvera-plugin/issues",
+  "privacy_policies": [
+    "https://github.com/SuresoftTechnologies/dvera-plugin/blob/main/PRIVACY.md"
+  ],
   "license": "MIT",
   "keywords": [
     "ct",
@@ -30,12 +36,20 @@
     "entry_point": "scripts/dvera-mcp.py",
     "mcp_config": {
       "command": "uv",
-      "args": ["run", "--project", "${__dirname}",
-               "${__dirname}/scripts/dvera-mcp.py"]
+      "args": [
+        "run",
+        "--project",
+        "${__dirname}",
+        "${__dirname}/scripts/dvera-mcp.py"
+      ]
     }
   },
+  "tools_generated": true,
   "compatibility": {
-    "platforms": ["win32", "linux"],
+    "platforms": [
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "python": ">=3.8"
     }
