@@ -43,7 +43,7 @@ claude plugin marketplace add SuresoftTechnologies/dvera-plugin
 claude plugin install dvera@suresofttech
 ```
 
-Skills then load as `dvera:ct-init-project`, `dvera:ct-test-loop`, and so on. The plugin adds about 870 tokens to every session; each Skill body is read only when that Skill runs.
+Skills then load as `/dvera:ct-init-project`, `/dvera:ct-test-loop`, and so on. The plugin adds about 620 tokens to every session; each Skill body is read only when that Skill runs.
 
 Product-backed actions need a deployed CT environment. Without one, a Skill stops at its installation check and shows how to reach product support.
 

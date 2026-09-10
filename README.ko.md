@@ -43,7 +43,7 @@ claude plugin marketplace add SuresoftTechnologies/dvera-plugin
 claude plugin install dvera@suresofttech
 ```
 
-설치 후 Skill은 `dvera:ct-init-project`, `dvera:ct-test-loop` 형태로 호출됩니다. 플러그인은 세션마다 약 870토큰을 사용하며, 각 Skill 본문은 해당 Skill이 실행될 때만 읽힙니다.
+설치 후 Skill은 `/dvera:ct-init-project`, `/dvera:ct-test-loop` 형태로 호출됩니다. 플러그인은 세션마다 약 620토큰을 사용하며, 각 Skill 본문은 해당 Skill이 실행될 때만 읽힙니다.
 
 제품 연동 동작에는 배포된 CT 환경이 필요합니다. 환경이 없으면 Skill은 설치 확인 단계에서 중단하고 제품 문의 경로를 안내합니다.
 
