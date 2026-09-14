@@ -12,7 +12,7 @@
     {
       "registryType": "mcpb",
       "identifier": "https://github.com/SuresoftTechnologies/dvera-plugin/releases/download/v0.1.0/dvera-mcp.mcpb",
-      "fileSha256": "23cf277268d4d0b887234756c6fa1e1c66ca63654ab3f3871bba9db912583349",
+      "fileSha256": "98a9c6d972996d00c166a0a10f7d73ec6261b5305ed3d33df4d0c8df20ea7f8b",
       "transport": {
         "type": "stdio"
       }

@@ -31,6 +31,14 @@
     "mcdc",
     "test-automation"
   ],
+  "user_config": {
+    "ct_home": {
+      "type": "directory",
+      "title": "CT installation directory",
+      "description": "Leave empty unless CT was installed somewhere other than the default location.",
+      "required": false
+    }
+  },
   "server": {
     "type": "uv",
     "entry_point": "scripts/dvera-mcp.py",
@@ -41,7 +49,10 @@
         "--project",
         "${__dirname}",
         "${__dirname}/scripts/dvera-mcp.py"
-      ]
+      ],
+      "env": {
+        "CT_HOME": "${user_config.ct_home}"
+      }
     }
   },
   "tools_generated": true,

@@ -26,8 +26,14 @@ The server does three things with data:
 3. Returns CT's response to the MCP client that asked for it.
 
 It writes no files of its own and keeps no database, cache, or log. It stores no
-credentials, tokens, or licence keys. Beyond the CT installation directory, it reads only
-the paths a tool call explicitly names.
+credentials, tokens, or licence keys. Beyond the CT installation directory, the server
+itself reads only the paths a tool call explicitly names.
+
+CT is a separate matter. Each call starts a CT process, and that process reads and writes
+what the requested operation needs: the active CT workspace, the project registered for
+it, your source files, and the analysis, test, and report output CT keeps in its own
+workspace. That work is CT's, under CT's own data handling, and it happens whether the
+request came from DVERA or from the CT IDE.
 
 ## What leaves your machine
 

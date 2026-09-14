@@ -237,13 +237,19 @@ def annotate(name, spec, table):
     What the catalog itself declares wins. Only where CT says nothing do the
     values in resources/tool-annotations.json apply, and only where that file
     says nothing is the hint decided by the tool's name.
+
+    A declared value is used only when it has the type the MCP schema requires.
+    A future catalog that says "yes" where a boolean belongs falls back to the
+    rules below rather than putting a schema violation on the wire.
     """
-    title = spec.get("title") or table["titles"].get(name) or _derive_title(name)
-    ann = {"title": title}
-    if "readOnlyHint" in spec or "destructiveHint" in spec:
-        for hint in ("readOnlyHint", "destructiveHint"):
-            if hint in spec:
-                ann[hint] = spec[hint]
+    declared = spec.get("title")
+    title = declared.strip() if isinstance(declared, str) and declared.strip() else None
+    ann = {"title": title or table["titles"].get(name) or _derive_title(name)}
+    hints = dict((hint, spec[hint])
+                 for hint in ("readOnlyHint", "destructiveHint")
+                 if isinstance(spec.get(hint), bool))
+    if hints:
+        ann.update(hints)
     elif name.startswith(table["prefixes"]):
         ann["readOnlyHint"] = True
     else:
@@ -361,6 +367,18 @@ def serve(tools, runtime, note=None):
     pending = queue.Queue()
     closing = threading.Event()
     in_flight = {"rid": None}
+    # Requests the client gave up on. A cancelled call is never started, and one
+    # cancelled mid-flight is never answered: nobody is waiting for either.
+    abandoned = set()
+    abandoned_lock = threading.Lock()
+
+    def give_up(rid):
+        """True when the client cancelled this request. Clears the mark."""
+        with abandoned_lock:
+            if rid in abandoned:
+                abandoned.discard(rid)
+                return True
+        return False
 
     def worker():
         while True:
@@ -368,14 +386,19 @@ def serve(tools, runtime, note=None):
             if item is None:  # sentinel: client is gone
                 return
             rid, name, params = item
+            if give_up(rid):
+                if closing.is_set():
+                    return
+                continue
             in_flight["rid"] = rid
             try:
                 text, is_error = call_tool(runtime, name, params.get("arguments"))
             except Exception as exc:  # noqa: BLE001 - the worker must not die
                 text, is_error = ("calling %s failed: %s" % (name, exc), True)
             in_flight["rid"] = None
-            result(rid, {"content": [{"type": "text", "text": text}],
-                         "isError": is_error})
+            if not give_up(rid):
+                result(rid, {"content": [{"type": "text", "text": text}],
+                             "isError": is_error})
             if closing.is_set():
                 # The client left while this call was running. It has been seen
                 # through so CT was not abandoned mid-operation, but anything
@@ -388,8 +411,16 @@ def serve(tools, runtime, note=None):
     worker_thread.start()
 
     def cancel(rid):
-        """Ask CT to abandon the call the client just gave up on."""
-        if rid is None or rid != in_flight["rid"]:
+        """Drop the call the client just gave up on.
+
+        A call still waiting in the queue is marked and never started. Only a
+        call already running has to be taken up with CT itself.
+        """
+        if rid is None:
+            return
+        with abandoned_lock:
+            abandoned.add(rid)
+        if rid != in_flight["rid"]:
             return
         try:
             subprocess.run([runtime["python"], runtime["ct_tool"], "cancel"],
