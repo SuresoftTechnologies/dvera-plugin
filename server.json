@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.SuresoftTechnologies/dvera-mcp",
+  "title": "DVERA CT verification tools",
+  "description": "DVERA drives CT verification of mission-critical C/C++: setup, analysis, tests, coverage.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/SuresoftTechnologies/dvera-plugin",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/SuresoftTechnologies/dvera-plugin/releases/download/v0.1.0/dvera-mcp.mcpb",
+      "fileSha256": "98a9c6d972996d00c166a0a10f7d73ec6261b5305ed3d33df4d0c8df20ea7f8b",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
