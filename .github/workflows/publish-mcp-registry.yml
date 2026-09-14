@@ -1,0 +1,38 @@
+# Publishes server.json to the official MCP Registry.
+#
+# Authentication is GitHub Actions OIDC, not a personal login: the registry
+# reads `repository_owner` from the workflow's OIDC token and grants
+# `io.github.<owner>/*`. That avoids needing an org Owner to run a device-code
+# login, and avoids the org's third-party OAuth app policy entirely.
+name: Publish to MCP Registry
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # required to mint the OIDC token
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mcp-publisher
+        env:
+          VERSION: v1.8.1
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/download/${VERSION}/mcp-publisher_linux_amd64.tar.gz" \
+            | tar -xz mcp-publisher
+          ./mcp-publisher --version
+
+      - name: Validate server.json
+        run: ./mcp-publisher validate server.json
+
+      - name: Log in via OIDC
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
