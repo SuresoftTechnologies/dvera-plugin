@@ -213,7 +213,9 @@ Read `{sessionsBase}/{session_id}/state.json`.
 | `analysis_success` | Phase 4 complete | Phase 5 |
 | `testing` | interrupted during Phase 5 | rerun Phase 5 |
 | `test_success` | full completion | report completion |
+| `regression_done` | regression check finished on a completed pipeline | report the `regression` object, then treat the pipeline as complete. Re-enter Phase 5 only if the user wants to act on `new_failures` |
 | `*_failed_*` | failure state | report failure and ask about retry |
+| anything else | status written by a skill this table does not cover | do not guess a phase. Show the status and the `artifacts` present, and ask the user which phase to resume from |
 
 ### Step 3: Fingerprint Validation on Resume
 

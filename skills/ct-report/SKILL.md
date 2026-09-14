@@ -68,11 +68,28 @@ ct_generate_report {
 
 ### Step 3: Report result
 
+Read the `ct_generate_report` result before reporting anything. Report success only when the
+call succeeded.
+
+**On success**:
+
 ```
 Report generated.
   Path:    {outputDir}
   Formats: {formats}
 ```
+
+**On failure**: do not say the report was generated. Show what CT returned and stop.
+
+```
+Report generation failed.
+  Project: {project_name}
+  CT said: {error message}
+```
+
+The usual cause is a project whose tests have not been executed yet, since
+`ct_generate_report` exports results that already exist. Direct the user to `ct-test-loop`
+when that is the case.
 
 ## Guardrails
 

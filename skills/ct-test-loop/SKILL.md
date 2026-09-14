@@ -130,7 +130,7 @@ else:
 - `ct_get_functions(projectName)` - function list
 - `ct_find_functions(projectName, query)` - similarity-based candidate search for standalone requirements-based mode
 - `ct_create_test(projectName, target)` - generate tests
-- `ct_ai_generate_test(projectName, signatureHash, spec?)` - AI test generation. With `spec`, use requirements-based generation; without `spec`, use CT built-in AI code analysis
+- `ct_ai_generate_test(projectName, signatureHash, specs?)` - AI test generation. `specs` is an array of requirement strings. With `specs`, use requirements-based generation; without it, use CT built-in AI code analysis
 - `ct_execute_test(projectName, executeAll)` - execute tests
 - `ct_get_test_results(projectName)` - retrieve results
 - `ct_get_coverage(projectName)` - retrieve coverage
