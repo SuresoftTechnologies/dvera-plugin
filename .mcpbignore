@@ -4,6 +4,7 @@ skills/
 .claude-plugin/
 RELEASING.md
 server.json
+glama.json
 README.ko.md
 .gitignore
 .gitattributes
