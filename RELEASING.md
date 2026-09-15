@@ -43,11 +43,15 @@ project.
    `.mcpbignore` excludes it, anything new that appears in the working tree
    ends up in the bundle unless it is listed there.
 
-3. Create the release and upload the bundle:
+3. Create the release **as a draft** and upload the bundle. It has to stay a
+   draft until step 7: publishing it is what triggers the registry workflow,
+   and `server.json` does not hold the right hash yet.
 
    ```
-   gh release create vX.Y.Z dvera-mcp.mcpb --title vX.Y.Z --notes "..."
+   gh release create vX.Y.Z dvera-mcp.mcpb --draft --title vX.Y.Z --notes "..."
    ```
+
+   Notes are read by people outside the company, so write them in English.
 
 4. Download the asset back and hash **that** file, not the local build - the
    uploaded copy is the one clients fetch and check:
@@ -75,13 +79,33 @@ project.
    git tag -f vX.Y.Z && git push --force origin vX.Y.Z
    ```
 
-7. Publish. The GitHub account used must be able to claim the
-   `io.github.SuresoftTechnologies/*` namespace:
+7. Publish the release. That is the whole of it - publishing the draft fires
+   `.github/workflows/publish-mcp-registry.yml`, which validates `server.json`
+   and pushes it to the official registry.
 
    ```
-   mcp-publisher login github
-   mcp-publisher publish
+   gh release edit vX.Y.Z --draft=false
+   gh run watch $(gh run list --workflow publish-mcp-registry.yml --limit 1 --json databaseId --jq '.[0].databaseId')
    ```
+
+   Confirm the entry landed:
+
+   ```
+   curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.SuresoftTechnologies"
+   ```
+
+## Why the registry publish runs in CI
+
+The workflow authenticates with GitHub Actions OIDC, and the registry grants
+`io.github.<repository_owner>/*` straight from the token's `repository_owner`
+claim. Because the repo is owned by `SuresoftTechnologies`, that is the
+namespace it gets.
+
+Do not replace this with `mcp-publisher login github` from a laptop. That path
+was tried and does not work here: the device-code flow only ever returned
+`io.github.<user>/*`, even for an org Owner with a public membership, because
+the organisation restricts third-party OAuth apps. OIDC sidesteps the org's
+app policy entirely and needs no Owner on hand at release time.
 
 ## Checking the bundle before release
 
