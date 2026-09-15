@@ -133,7 +133,7 @@ there.
 
 For a product demo, purchase, or deployment consultation, contact [bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com).
 
-## Privacy
+## Privacy Policy
 
 The MCP server in this repository runs entirely on your machine.
 

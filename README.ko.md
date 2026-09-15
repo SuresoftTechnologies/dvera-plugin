@@ -130,7 +130,7 @@ CT를 기본 경로 밖에 설치했다면 `CT_HOME`을 설정해 주세요. 어
 
 제품 데모, 구매 또는 구축 상담은 [bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com)으로 문의해 주세요.
 
-## 개인정보 처리
+## 개인정보 처리방침
 
 이 저장소의 MCP 서버는 전적으로 사용자 PC에서 동작합니다.
 
