@@ -94,14 +94,14 @@ project.
    curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.SuresoftTechnologies"
    ```
 
-8. Cut the Glama release. It is a separate thing from the GitHub release and
-   from the registry entry, and nothing automates it: without it the listing
-   keeps showing the previous version and its score stays capped.
+8. Check that Glama picked the release up. **Auto-Release** is switched on for
+   the listing, so publishing the GitHub release in step 7 also builds and
+   publishes there - the same event drives both, and by then `server.json` and
+   the tag are already settled.
 
-   Open the [Dockerfile admin page][glama-dockerfile] and use **Build &
-   Release**, which builds the image and publishes in one go and takes `X.Y.Z`
-   as the version. The build spec is already saved and only needs revisiting if
-   the entry point moves:
+   Open the [Dockerfile admin page][glama-dockerfile] and confirm the build
+   succeeded and the new version is listed. The saved build spec only needs
+   revisiting if the entry point moves:
 
    ```
    baseImage     debian:trixie-slim
@@ -115,7 +115,8 @@ project.
 
    The sandbox has no CT, so the run reports zero tools. That is a pass, not a
    failure - the server completes the handshake and its `instructions` string
-   says why the list is empty.
+   says why the list is empty. If Auto-Release is ever turned off, the same page
+   has **Build & Release**, which does both by hand.
 
 [glama-dockerfile]: https://glama.ai/mcp/servers/SuresoftTechnologies/dvera-plugin/admin/dockerfile
 
