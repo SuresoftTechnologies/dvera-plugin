@@ -11,8 +11,8 @@
   "packages": [
     {
       "registryType": "mcpb",
-      "identifier": "https://github.com/SuresoftTechnologies/dvera-plugin/releases/download/v0.1.0/dvera-mcp.mcpb",
-      "fileSha256": "1ef03aec68ce8c8bc6bdc1353150be38c0d1684e426267178c610748acaac046",
+      "identifier": "https://github.com/SuresoftTechnologies/dvera-plugin/releases/download/v0.1.1/dvera-mcp.mcpb",
+      "fileSha256": "e85a4e4ef57fdbed99465f3955753ba69826abde1c7d8774a65c112192bd27e3",
       "transport": {
         "type": "stdio"
       }
