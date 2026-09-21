@@ -60,6 +60,11 @@ project.
    gh release create vX.Y.Z dvera-mcp.mcpb --draft --title vX.Y.Z --notes "..."
    ```
 
+   Do not create the tag yourself. `vX.Y.Z` does not exist yet, and the draft
+   targets the default branch; GitHub cuts the tag when the release is
+   published in step 7, at whatever `main` points to then. Step 6 commits
+   `server.json` before that, so the tag lands on it.
+
    Notes are read by people outside the company, so write them in English.
 
 4. Download the asset back and hash **that** file, not the local build - the
@@ -81,12 +86,22 @@ project.
    mcp-publisher validate server.json
    ```
 
-6. Commit the updated `server.json`, then move the tag onto that commit so the
-   release points at the metadata it describes:
+6. Commit and push the updated `server.json`. Nothing else: the tag does not
+   exist yet, so there is no tag to move, and step 7 creates it on this commit.
 
    ```
-   git tag -f vX.Y.Z && git push --force origin vX.Y.Z
+   git add server.json && git commit -m "..." && git push origin main
    ```
+
+   Confirm after step 7 that the tag really is on that commit:
+
+   ```
+   git ls-remote --tags origin vX.Y.Z
+   ```
+
+   The one case that needs more care is re-cutting a version whose tag already
+   exists. Then the draft keeps the old tag, and the commit has to be moved
+   deliberately rather than as a routine step - prefer a new version number.
 
 7. Publish the release. That is the whole of it - publishing the draft fires
    `.github/workflows/publish-mcp-registry.yml`, which validates `server.json`
