@@ -121,8 +121,9 @@ open it with a client that installs MCP bundles. It resolves its own Python, so 
 to be installed first.
 
 Set `CT_HOME` if CT is installed outside the default location. The server is safe to leave
-configured on any machine: it starts either way and simply offers no tools until CT is
-there.
+configured on any machine: it starts either way, and without CT it offers a single tool,
+`dvera_check_environment`, which reports what is missing and what to do about it. That tool
+is also there when CT is - run it first whenever the verification tools do not appear.
 
 ## Requirements for product-backed verification
 

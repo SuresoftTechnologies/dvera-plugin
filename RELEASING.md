@@ -137,10 +137,12 @@ project.
    `buildSteps` is empty because the server has no third-party dependencies.
    Glama wraps the command with `mcp-proxy` itself.
 
-   The sandbox has no CT, so the run reports zero tools. That is a pass, not a
-   failure - the server completes the handshake and its `instructions` string
-   says why the list is empty. If Auto-Release is ever turned off, the same page
-   has **Build & Release**, which does both by hand.
+   The sandbox has no CT, so the run reports one tool -
+   `dvera_check_environment`, the built-in check that needs no product behind
+   it. That is a pass: the server completes the handshake, and its
+   `instructions` string says why the verification tools are missing. If
+   Auto-Release is ever turned off, the same page has **Build & Release**,
+   which does both by hand.
 
 [glama-dockerfile]: https://glama.ai/mcp/servers/SuresoftTechnologies/dvera-plugin/admin/dockerfile
 
@@ -167,5 +169,5 @@ uv run --directory out scripts/dvera-mcp.py
 ```
 
 Send it an `initialize` request on stdin. With CT installed it reports the
-tools the installed CT declares; without CT it reports zero and stays
-connected rather than failing.
+tools the installed CT declares; without CT it reports only
+`dvera_check_environment` and stays connected rather than failing.

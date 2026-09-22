@@ -17,8 +17,9 @@ subprocess. CT does keep a helper of its own alive between calls and retires it
 when idle - that lifetime belongs to the product, not to this server.
 
 Without a CT install this process does NOT fail. It answers the handshake and
-reports zero tools, so machines without CT see the DVERA Skills only, with no
-connection error.
+lists its own ``dvera_check_environment`` tool, which reports what is missing.
+Machines without CT therefore see the DVERA Skills and a usable diagnosis
+rather than an empty server.
 
 Env overrides:
   CT_HOME  CT install dir (default: platform standard path)
@@ -39,9 +40,10 @@ SERVER_INFO = {"name": "dvera-mcp", "version": "0.1.2"}
 CALL_TIMEOUT_SEC = 900  # ct_tool.py's own default for the tool itself is 600
 
 NO_CT_MESSAGE = (
-    "CT is not available on this machine, so DVERA exposes no MCP tools. "
-    "The DVERA Skills still work for guidance. To enable the tools, install "
-    "CT 2026.06 or later and set CT_HOME if it is not in the default location."
+    "DVERA's CT verification tools are unavailable on this machine, so it "
+    "exposes only dvera_check_environment, which reports why. The DVERA Skills "
+    "still work for guidance. Run that tool, or install CT 2026.06 or later "
+    "and set CT_HOME if it is outside the default location."
 )
 
 
@@ -140,8 +142,8 @@ def _validate_catalog(catalog):
 
     Unknown extra fields are allowed on purpose - the product may add some -
     but every field this code reads has to be the shape it expects, so that a
-    format change degrades to zero tools with a stated reason instead of
-    exposing an invalid tool list or crashing before the handshake.
+    format change degrades to the built-in check alone, with a stated reason,
+    instead of exposing an invalid tool list or crashing before the handshake.
     """
     if not isinstance(catalog, dict) or not catalog:
         raise ValueError("expected a non-empty object keyed by tool name")
@@ -276,6 +278,122 @@ def load_tools(bundle):
 
 
 # --------------------------------------------------------------------------
+# the built-in tool
+# --------------------------------------------------------------------------
+
+# One tool this server answers by itself, with no product behind it. Two
+# reasons for it:
+#
+#   - without CT the tool list would otherwise be empty, and an empty list
+#     reads as a server that does nothing: a client shows no capability, and a
+#     directory that scans the server in a CT-less sandbox records no catalog
+#     at all
+#   - "why did no tools appear" is the one question this server can answer
+#     better than anything else, because it is the code that did the looking
+#
+# The name sits outside CT's ``ct_`` namespace on purpose: the tool belongs to
+# DVERA, so a tool the product adds later can never collide with it.
+BUILTIN_TOOL_NAME = "dvera_check_environment"
+
+BUILTIN_TOOL = {
+    "name": BUILTIN_TOOL_NAME,
+    "title": "Check DVERA environment",
+    "description": (
+        "Report whether a local CT installation is usable by DVERA, and what is "
+        "missing when it is not. Takes no arguments and needs no CT install, so "
+        "it is the tool to run when the verification tools are absent from the "
+        "list."
+    ),
+    "inputSchema": {"type": "object", "properties": {}},
+    "annotations": {"title": "Check DVERA environment", "readOnlyHint": True},
+}
+
+
+def with_builtin(tools):
+    """Append the built-in tool, and let no catalog entry claim its name."""
+    return [t for t in tools if t["name"] != BUILTIN_TOOL_NAME] + [BUILTIN_TOOL]
+
+
+def _without_bundle_name(exc, bundle):
+    """The exception text with the bundle's directory name taken out.
+
+    That name is an internal identifier of the product. Everything else - a
+    missing file, a JSON syntax error, a rejected catalog entry, the install
+    path the user chose - is what makes the failure diagnosable, so only the
+    one name goes. Matching on the bare name rather than the whole path is
+    deliberate: OSError renders the filename with repr, which doubles every
+    backslash, so a path built with os.path.join would not match the text.
+    """
+    return str(exc).replace(os.path.basename(bundle), "<CT MCP bundle>")
+
+
+def check_environment(ct_ready, tools, note):
+    """Answer the built-in tool: what this process found, and what to do next.
+
+    Everything is looked up again at call time rather than reported from
+    startup. The two can disagree - CT installed, removed or repaired since the
+    client started - and that disagreement is the useful part, because its fix
+    is a client restart rather than anything about CT itself.
+
+    The bundle is reported as a yes or no. Its directory name is an internal
+    identifier, and the reasoning that keeps it out of ``find_bundle`` keeps it
+    out of a tool result too.
+    """
+    home = find_ct_home()
+    bundle = find_bundle(home) if home else None
+    catalog_error = None
+    if bundle is not None:
+        try:
+            load_tools(bundle)
+        except Exception as exc:  # noqa: BLE001 - reporting it is the job here
+            catalog_error = _without_bundle_name(exc, bundle)
+    usable_now = bundle is not None and catalog_error is None
+
+    if ct_ready and usable_now:
+        step = ("None. The CT verification tools are listed; a licence problem, "
+                "if there is one, surfaces on the first call.")
+    elif ct_ready:
+        step = ("The CT install this server started from is no longer usable. "
+                "Restore it, then restart the MCP client - calls will fail "
+                "until it is back.")
+    elif usable_now:
+        step = ("CT is usable now but was not when this server started. "
+                "Restart the MCP client to pick the verification tools up.")
+    elif catalog_error is not None:
+        step = ("CT is installed, but DVERA cannot read its MCP tool catalog. "
+                "See catalogError, then repair or reinstall CT 2026.06 or "
+                "later.")
+    elif home is not None:
+        step = ("CT was found but carries no MCP bundle. Install CT 2026.06 or "
+                "later, which is the first release that ships one.")
+    elif os.environ.get("CT_HOME"):
+        step = ("CT_HOME names a directory that does not exist. Point it at the "
+                "CT install directory, or unset it to use the default path.")
+    else:
+        step = ("No CT install was found. Install CT 2026.06 or later, and set "
+                "CT_HOME if it is outside the default location.")
+
+    return {
+        # What this process serves was fixed at startup; what is on disk can
+        # have changed since. The two are reported apart on purpose.
+        "verificationToolsLoaded": ct_ready,
+        "verificationTools": len([t for t in tools
+                                  if t["name"] != BUILTIN_TOOL_NAME]),
+        "ctUsableNow": usable_now,
+        "catalogError": catalog_error,
+        "nextStep": step,
+        "atStartup": note,
+        "environment": {
+            "server": "%(name)s %(version)s" % SERVER_INFO,
+            "python": "%d.%d.%d" % sys.version_info[:3],
+            "platform": sys.platform,
+            "ctHome": home,
+            "ctHomeOverride": os.environ.get("CT_HOME") or None,
+        },
+    }
+
+
+# --------------------------------------------------------------------------
 # tool invocation
 # --------------------------------------------------------------------------
 
@@ -370,15 +488,28 @@ def serve(tools, runtime, note=None):
     # Requests the client gave up on. A cancelled call is never started, and one
     # cancelled mid-flight is never answered: nobody is waiting for either.
     abandoned = set()
+    # Ids the worker still owes a reply for. A cancellation naming anything else
+    # - a call already answered on the read thread, or an id this server never
+    # saw - is dropped rather than remembered, so a client that reuses that id
+    # later does not silently lose the reply to it.
+    outstanding = set()
     abandoned_lock = threading.Lock()
 
-    def give_up(rid):
-        """True when the client cancelled this request. Clears the mark."""
+    def enqueue(rid, name, params):
         with abandoned_lock:
-            if rid in abandoned:
-                abandoned.discard(rid)
-                return True
-        return False
+            outstanding.add(rid)
+        pending.put((rid, name, params))
+
+    def give_up(rid):
+        """True when the client cancelled this request."""
+        with abandoned_lock:
+            return rid in abandoned
+
+    def settled(rid):
+        """The worker owes nothing more for this id."""
+        with abandoned_lock:
+            outstanding.discard(rid)
+            abandoned.discard(rid)
 
     def worker():
         while True:
@@ -387,6 +518,7 @@ def serve(tools, runtime, note=None):
                 return
             rid, name, params = item
             if give_up(rid):
+                settled(rid)
                 if closing.is_set():
                     return
                 continue
@@ -399,6 +531,7 @@ def serve(tools, runtime, note=None):
             if not give_up(rid):
                 result(rid, {"content": [{"type": "text", "text": text}],
                              "isError": is_error})
+            settled(rid)
             if closing.is_set():
                 # The client left while this call was running. It has been seen
                 # through so CT was not abandoned mid-operation, but anything
@@ -419,6 +552,8 @@ def serve(tools, runtime, note=None):
         if rid is None:
             return
         with abandoned_lock:
+            if rid not in outstanding:
+                return  # already answered, or never this server's to run
             abandoned.add(rid)
         if rid != in_flight["rid"]:
             return
@@ -428,8 +563,15 @@ def serve(tools, runtime, note=None):
         except (OSError, subprocess.SubprocessError):
             pass  # best effort; the call will still finish on its own
 
+    def builtin(rid):
+        report = check_environment(runtime is not None, tools, note)
+        text = json.dumps(report, ensure_ascii=False, indent=2)
+        result(rid, {"content": [{"type": "text", "text": text}],
+                     "isError": False})
+
     try:
-        _read_loop(sys.stdin, tools, pending, result, error, cancel)
+        _read_loop(sys.stdin, tools, runtime is not None, builtin,
+                   enqueue, result, error, cancel)
     finally:
         closing.set()
         # However the loop ends - EOF, a decoding error, an unexpected raise -
@@ -441,7 +583,8 @@ def serve(tools, runtime, note=None):
     return 0
 
 
-def _read_loop(stream, tools, pending, result, error, cancel=None):
+def _read_loop(stream, tools, ct_ready, builtin,
+               enqueue, result, error, cancel=None):
     for line in stream:
         line = line.strip()
         if not line:
@@ -474,7 +617,7 @@ def _read_loop(stream, tools, pending, result, error, cancel=None):
                 "capabilities": {"tools": {}},
                 "serverInfo": SERVER_INFO,
             }
-            if not tools:
+            if not ct_ready:
                 payload["instructions"] = NO_CT_MESSAGE
             result(rid, payload)
         elif method == "tools/list":
@@ -482,10 +625,21 @@ def _read_loop(stream, tools, pending, result, error, cancel=None):
         elif method == "ping":
             result(rid, {})
         elif method == "tools/call":
-            if not tools:
+            name = params.get("name")
+            if name == BUILTIN_TOOL_NAME:
+                bad = validate_arguments(BUILTIN_TOOL["inputSchema"],
+                                         params.get("arguments") or {})
+                if bad is not None:
+                    error(rid, -32602, "%s: %s" % (name, bad))
+                    continue
+                # Answered on this thread rather than queued behind the worker:
+                # it starts no subprocess, and the moment it is most wanted is
+                # while a long CT call is holding the queue.
+                builtin(rid)
+                continue
+            if not ct_ready:
                 error(rid, -32602, NO_CT_MESSAGE)
                 continue
-            name = params.get("name")
             tool = next((t for t in tools if t["name"] == name), None)
             if tool is None:
                 error(rid, -32602, "Unknown tool: %s" % name)
@@ -497,7 +651,7 @@ def _read_loop(stream, tools, pending, result, error, cancel=None):
             # CT operations such as analysis or test execution run for minutes,
             # so hand the call to the worker and keep reading. Otherwise the
             # server answers nothing meanwhile and the client drops it.
-            pending.put((rid, name, params))
+            enqueue(rid, name, params)
         else:
             error(rid, -32601, "Method not found: %s" % method)
 
@@ -506,19 +660,25 @@ def main():
     ensure_utf8_stdio()
     home = find_ct_home()
     if home is None:
-        return serve([], None, "no CT install found. Serving zero tools.")
+        return serve(with_builtin([]), None,
+                     "no CT install found. Serving the built-in check only.")
     bundle = find_bundle(home)
     if bundle is None:
-        return serve([], None, "CT at %s has no MCP bundle (needs 2026.06+). "
-                               "Serving zero tools." % home)
+        return serve(with_builtin([]), None,
+                     "CT at %s has no MCP bundle (needs 2026.06+). "
+                     "Serving the built-in check only." % home)
     ct_tool = os.path.join(bundle, "scripts", "ct_tool.py")
     try:
         tools = load_tools(bundle)
     except Exception as exc:  # noqa: BLE001 - never fail before the handshake
-        return serve([], None, "could not read the CT tool catalog (%s). "
-                               "Serving zero tools." % exc)
+        print("dvera-mcp: catalog read failed: %s"
+              % _without_bundle_name(exc, bundle), file=sys.stderr, flush=True)
+        return serve(with_builtin([]), None,
+                     "CT is installed, but its MCP tool catalog could not be "
+                     "read. Serving the built-in check only.")
     runtime = {"python": find_python(home), "ct_tool": ct_tool}
-    return serve(tools, runtime, "CT found at %s; %d tools." % (home, len(tools)))
+    return serve(with_builtin(tools), runtime,
+                 "CT found at %s; %d verification tools." % (home, len(tools)))
 
 
 if __name__ == "__main__":
