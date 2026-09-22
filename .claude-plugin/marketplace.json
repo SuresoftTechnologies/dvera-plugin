@@ -11,7 +11,7 @@
       "name": "dvera",
       "description": "Connect AI coding-agent context to CT (Controller Tester) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
       "source": "./",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "category": "testing",
       "tags": [
         "dvera",
