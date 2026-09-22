@@ -118,10 +118,24 @@ project.
    curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.SuresoftTechnologies"
    ```
 
-8. Check that Glama picked the release up. **Auto-Release** is switched on for
-   the listing, so publishing the GitHub release in step 7 also builds and
-   publishes there - the same event drives both, and by then `server.json` and
-   the tag are already settled.
+8. Check that Glama picked the release up, and do not assume it did.
+   **Auto-Release** is switched on for the listing, so publishing the GitHub
+   release in step 7 is supposed to build and publish there as well.
+
+   It stopped doing that after 0.1.1 and nobody noticed for two releases: on
+   2026-09-22 Glama still held `latestRelease 0.1.1`, having missed 0.1.2 and
+   0.1.3. **Confirm the reflection on every release rather than trusting the
+   setting.** The server page shows no version anywhere, so read
+   `latestRelease.version` out of the page's embedded data, or check that the
+   Schema tab lists the tools you expect.
+
+   **Sync Glama's copy of the repository before building.** Glama builds from
+   its own clone, not from the release you just cut, and a stale clone produces
+   a build that carries the new version number over old code. That is what
+   happened to 0.1.3: Glama published a `0.1.3` built from a 2026-09-18 commit,
+   which reported zero tools, and the version could not be rebuilt afterwards -
+   the admin page offers no way to delete or overwrite a published release. The
+   only way out was to burn a version and cut 0.1.4. Sync first, build second.
 
    Open the [Dockerfile admin page][glama-dockerfile] and confirm the build
    succeeded and the new version is listed. The saved build spec only needs
@@ -140,9 +154,9 @@ project.
    The sandbox has no CT, so the run reports one tool -
    `dvera_check_environment`, the built-in check that needs no product behind
    it. That is a pass: the server completes the handshake, and its
-   `instructions` string says why the verification tools are missing. If
-   Auto-Release is ever turned off, the same page has **Build & Release**,
-   which does both by hand.
+   `instructions` string says why the verification tools are missing. Where
+   Auto-Release has not run, the same page has **Build & Release**, which does
+   both by hand - after the sync above, never before it.
 
 [glama-dockerfile]: https://glama.ai/mcp/servers/SuresoftTechnologies/dvera-plugin/admin/dockerfile
 
