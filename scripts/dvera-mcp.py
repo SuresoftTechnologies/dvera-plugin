@@ -36,7 +36,7 @@ import threading
 # Versions this server implements. The newest is offered when a client asks
 # for something outside the list.
 SUPPORTED_PROTOCOLS = ("2025-06-18", "2025-03-26", "2024-11-05")
-SERVER_INFO = {"name": "dvera-mcp", "version": "0.1.3"}
+SERVER_INFO = {"name": "dvera-mcp", "version": "0.1.4"}
 CALL_TIMEOUT_SEC = 900  # ct_tool.py's own default for the tool itself is 600
 
 NO_CT_MESSAGE = (

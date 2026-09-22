@@ -3,7 +3,7 @@
   "name": "io.github.SuresoftTechnologies/dvera-mcp",
   "title": "DVERA CT verification tools",
   "description": "DVERA drives CT verification of mission-critical C/C++: setup, analysis, tests, coverage.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "repository": {
     "url": "https://github.com/SuresoftTechnologies/dvera-plugin",
     "source": "github"
