@@ -29,16 +29,20 @@ project.
 ## Steps
 
 1. Bump `version` in `manifest.json`, `pyproject.toml`, `server.json`,
-   `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, and
-   `SERVER_INFO` in `scripts/dvera-mcp.py` so all six agree. Below, `X.Y.Z` is
-   that version.
+   `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`,
+   `plugin.json`, `gemini-extension.json`, and `SERVER_INFO` in
+   `scripts/dvera-mcp.py` so all eight agree. Below, `X.Y.Z` is that version.
+
+   The root `plugin.json` is the Agent Plugins 1.0 manifest that Kiro and
+   VS Code read, and `gemini-extension.json` is what Gemini CLI reads. Both
+   carry the skills only, so they need no change beyond the version.
 
    `SERVER_INFO` is the one clients read back over the wire, in the
    `initialize` response. It was missed in 0.1.1, which shipped announcing
    itself as `0.1.0`. Check it with:
 
    ```
-   grep -rn 'X\.Y\.Z' manifest.json pyproject.toml server.json        .claude-plugin/plugin.json .claude-plugin/marketplace.json        scripts/dvera-mcp.py
+   grep -rn 'X\.Y\.Z' manifest.json pyproject.toml server.json        .claude-plugin/plugin.json .claude-plugin/marketplace.json        plugin.json gemini-extension.json scripts/dvera-mcp.py
    ```
 
 2. Build the bundle. The output name must contain `mcp`, because the registry

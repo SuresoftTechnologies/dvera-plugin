@@ -2,6 +2,8 @@
 # belong to the Claude Code plugin, not to this bundle.
 skills/
 .claude-plugin/
+plugin.json
+gemini-extension.json
 RELEASING.md
 server.json
 glama.json
