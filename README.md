@@ -6,6 +6,8 @@ DVERA (Dynamic Verification Agent) brings CT C/C++ verification work into coding
 
 CT (Controller Tester) is a test automation solution for unit, integration, and code-based testing of mission-critical C/C++ software. It brings together test-environment setup, test design and generation, execution, code-coverage analysis, reporting, and traceability management.
 
+For functional safety projects, the [official CT product page](https://apps.suresofttech.com/ct/) describes unit and integration verification, code coverage, requirements traceability, and an ISO 26262 application example.
+
 DVERA does not replace CT's verification results. The coding agent helps prepare and coordinate verification work; CT performs the analysis, build, test execution, and result aggregation. Generated tests must be reviewed for test intent, data, and expected results, then confirmed with actual execution results and measured coverage.
 
 ## What the CT and DVERA workflow adds
