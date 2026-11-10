@@ -29,9 +29,9 @@ DVERA가 CT의 검증 결과를 대체하지는 않습니다. 코딩 에이전�
 
 이 저장소의 Skill은 위 제품 연동 작업 흐름을 문서화합니다. CT 설치본을 대체하는 독립 도구는 아닙니다.
 
-## Claude 디렉터리 배포본
+## Claude 플러그인 디렉터리 배포본
 
-이 Claude 디렉터리 배포본에는 DVERA Skills가 포함됩니다. CT 실행 환경과 선택 사항인 로컬 MCP
+이 Claude 플러그인 디렉터리 배포본에는 DVERA Skills가 포함됩니다. CT 실행 환경과 선택 사항인 로컬 MCP
 서버는 포함하지 않습니다. 제품 기반 동작에는 별도로 설치된 CT 환경과 유효한 CT 라이선스가 필요합니다.
 
 [전체 소스 저장소](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)에서 선택 사항인
@@ -96,13 +96,14 @@ CT 사용자 가이드의 트리거 예시입니다. 동일한 요청이라도 �
 
 ## 제품 연동 작업 흐름
 
-DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 Claude 디렉터리 배포본은 검증 작업 흐름을 문서화하고 Skills를 포함합니다. CT와 실행 환경은 별도로 설치해야 합니다.
+DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 Claude 플러그인 디렉터리 배포본은 검증 작업 흐름을 문서화하고 Skills를 포함합니다. CT와 실행 환경은 별도로 설치해야 합니다.
 
 구축 전에는 이 저장소의 작업 흐름을 검토할 수 있지만, CT 동작이 필요한 Skill은 설치 확인에서 중단합니다. CT 분석·실행·커버리지 측정·보고가 수행됐다고 주장하지 않습니다.
 
 ## 선택 사항인 로컬 MCP 연결
 
-로컬 MCP 서버는 이 Claude 디렉터리 패키지와 별도로 배포합니다.
+로컬 MCP 서버는 이 Claude 플러그인 디렉터리 패키지와 별도로 배포합니다.
+서버를 연결하면 대화 중에 CT 프로젝트 생성, 분석 실행, 테스트 생성과 실행, 커버리지 확인을 수행할 수 있습니다.
 [전체 저장소의 MCP 설정 안내(영문)](https://github.com/SuresoftTechnologies/dvera-plugin/blob/main/README.md#mcp-tools)에
 따라 연결할 수 있습니다. MCP 서버에도 로컬 CT 설치와 유효한 CT 라이선스가 필요합니다.
 
@@ -117,7 +118,7 @@ DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 Claude 디�
 
 ## 개인정보 처리방침
 
-[전체 소스 저장소](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)의 선택 사항인 MCP 서버는 전적으로 사용자 PC에서 동작합니다. 이 Claude 디렉터리 패키지에는 포함하지 않습니다.
+[전체 소스 저장소](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)의 선택 사항인 MCP 서버는 전적으로 사용자 PC에서 동작합니다. 이 Claude 플러그인 디렉터리 패키지에는 포함하지 않습니다.
 
 - Suresoft Technologies를 포함해 어디에도 데이터를 전송하지 않습니다. 자체 텔레메트리·분석·네트워크
   호출이 없습니다.
@@ -129,8 +130,8 @@ DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 Claude 디�
 
 Skills는 별도 프로그램을 포함하지 않는 Markdown 지침입니다. 에이전트가 별도로 설치된 CT를
 호출하도록 안내합니다. 에이전트가 CT 출력을 읽으면 소스 경로, 함수명, 소스 코드 일부, 테스트
-결과와 커버리지 데이터를 사용 중인 AI 제공자에게 전달할 수 있습니다. 이 전송에는 해당 AI
-제공자의 약관과 개인정보 처리방침이 적용됩니다. Skills 패키지는 이 데이터를 Suresoft Technologies로
+결과와 커버리지 데이터를 사용 중인 AI 서비스 제공업체에 전달할 수 있습니다. 이 전송에는 해당 AI
+서비스 제공업체의 약관과 개인정보 처리방침이 적용됩니다. Skills 패키지는 이 데이터를 Suresoft Technologies로
 전송하지 않습니다.
 
 전문은 [PRIVACY.md](PRIVACY.md)에 있습니다. CT 제품 자체의 데이터 처리에 대한 문의는
@@ -138,6 +139,6 @@ Skills는 별도 프로그램을 포함하지 않는 Markdown 지침입니다. �
 
 ## 라이선스 및 상표
 
-이 저장소는 [MIT 라이선스](LICENSE)를 따릅니다. 라이선스는 이 배포본의 문서와 Skill 파일에 적용됩니다. CT 자체에는 적용되지 않습니다. CT와 DVERA는 Suresoft Technologies의 제품이며, 이 저장소의 라이선스로 제품 기능이나 제품 라이선스가 제공되지는 않습니다.
+이 저장소는 [MIT 라이선스](LICENSE)를 따릅니다. 라이선스는 이 저장소의 전부 — 문서, Skill 파일, MCP 서버 소스 — 에 적용됩니다. CT 자체에는 적용되지 않습니다. CT와 DVERA는 Suresoft Technologies의 제품이며, 이 저장소의 라이선스로 제품 기능이나 제품 라이선스가 제공되지는 않습니다.
 
 GoogleTest는 Google LLC의 상표입니다. 이 저장소는 Google과 제휴 관계에 있지 않으며 Google의 후원이나 승인을 받지 않았습니다. 그 밖의 제품명은 각 소유자의 상표일 수 있습니다.

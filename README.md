@@ -105,6 +105,7 @@ Without the deployed environment, users can inspect this repository's documented
 ## Optional local MCP connection
 
 The local MCP server is distributed separately from this Claude directory package.
+When connected to a local CT installation, it supports project creation, analysis, test generation and execution, and coverage queries from your agent.
 Use the [full repository's MCP setup instructions](https://github.com/SuresoftTechnologies/dvera-plugin/blob/main/README.md#mcp-tools)
 to configure it. The MCP server still requires a local CT installation and a valid CT license.
 
@@ -142,6 +143,6 @@ product itself go to
 
 ## License and trademarks
 
-This repository is licensed under the [MIT License](LICENSE). The license covers the documentation and Skill files in this distribution. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.
+This repository is licensed under the [MIT License](LICENSE). The license covers everything in this repository - the documentation, the Skill files, and the MCP server source. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.
 
 GoogleTest is a trademark of Google LLC. This repository is not affiliated with, sponsored by, or endorsed by Google. Other product names may be trademarks of their respective owners.
