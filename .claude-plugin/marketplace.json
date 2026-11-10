@@ -9,11 +9,13 @@
   "plugins": [
     {
       "name": "dvera",
-      "description": "Connect AI coding-agent context to CT (Controller Tester) C/C++ verification workflows: project preparation, analysis, test generation, execution, coverage, reporting, and regression follow-up.",
+      "description": "DVERA connects coding agents to CT for C/C++ unit and integration verification in functional-safety projects through MCP and Skills.",
       "source": "./",
-      "version": "0.1.4",
+      "version": "0.1.5",
       "category": "testing",
       "tags": [
+        "functional-safety",
+        "mcp",
         "dvera",
         "ct",
         "controller-tester",
