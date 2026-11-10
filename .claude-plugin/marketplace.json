@@ -9,13 +9,12 @@
   "plugins": [
     {
       "name": "dvera",
-      "description": "DVERA connects coding agents to CT for C/C++ unit and integration verification in functional-safety projects through MCP and Skills.",
+      "description": "DVERA Skills connect coding agents to CT for C/C++ unit and integration verification in functional-safety projects. CT is installed separately.",
       "source": "./",
       "version": "0.1.5",
       "category": "testing",
       "tags": [
         "functional-safety",
-        "mcp",
         "dvera",
         "ct",
         "controller-tester",

@@ -1,9 +1,11 @@
 # Privacy Policy
 
-This policy covers the DVERA plugin and the DVERA MCP server in this repository. It does
-not cover CT itself, which is a separate Suresoft Technologies product with its own terms.
+This policy covers the DVERA Skills in this Claude directory distribution. The optional
+local MCP server is distributed separately in the [full source repository](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main).
+The sections below that describe the MCP server apply only when you install it separately.
+CT itself is a separate Suresoft Technologies product with its own terms.
 
-Last updated: 2026-09-10
+Last updated: 2026-11-10
 
 ## What is collected
 
@@ -13,7 +15,8 @@ The MCP server (`scripts/dvera-mcp.py`) runs on your machine. It makes no networ
 of its own: no telemetry, no analytics, no crash reporting, no update checks. Suresoft
 Technologies receives no data as a result of you installing or running it.
 
-The Skills are Markdown documents. They contain no executable code.
+The Skills are Markdown instructions with no bundled programs. They direct your coding
+agent to call a separately installed CT environment.
 
 ## How data is used and stored
 
@@ -36,6 +39,17 @@ workspace. That work is CT's, under CT's own data handling, and it happens wheth
 request came from DVERA or from the CT IDE.
 
 ## What leaves your machine
+
+### Skills
+
+When a Skill directs your coding agent to run CT and read its output, that output may
+include source file paths, function names, source code excerpts, test results, and coverage
+data. Your coding agent sends this information to its AI provider under that provider's
+terms and privacy policy, including Anthropic's when you use Claude. The Skills package
+does not send this data to Suresoft Technologies. CT's own data handling is governed by
+the CT product's terms.
+
+### Separately installed MCP server
 
 The server sends nothing. **Your MCP client does.**
 

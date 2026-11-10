@@ -29,9 +29,22 @@ DVERA does not replace CT's verification results. The coding agent helps prepare
 
 The Skills in this repository document that product-connected workflow. They are not standalone replacements for a CT installation.
 
+## Claude directory package
+
+This Claude directory distribution contains DVERA Skills. It does not bundle the CT
+runtime or the optional local MCP server. Product-backed actions require a separately
+installed CT environment and a valid CT license.
+
+The [full source repository](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)
+also provides the optional local MCP server and the MCP Bundle distribution.
+
 ## Install
 
-In Claude Code:
+Install DVERA from Claude's plugin directory to use this Skills-only package.
+The manual commands below install the full repository from `main`, which also includes
+the optional local MCP server source.
+
+For manual installation from the full source repository, in Claude Code:
 
 ```text
 /plugin marketplace add SuresoftTechnologies/dvera-plugin
@@ -85,47 +98,15 @@ All Skills require a deployed CT environment for their product-backed actions an
 
 ## Product-backed workflow
 
-DVERA works with a deployed CT and DVERA environment. This repository documents the verification workflow and ships an MCP server that forwards tool calls to a local CT installation, but does not include the CT runtime or product installation.
+DVERA works with a deployed CT and DVERA environment. This Claude directory distribution documents the verification workflow and contains the Skills. CT and its runtime are installed separately.
 
 Without the deployed environment, users can inspect this repository's documented workflow, but a Skill that needs CT actions stops at its installation check. It must not claim that CT analysis, execution, coverage measurement, or reporting has occurred.
 
-## MCP tools
+## Optional local MCP connection
 
-Give the agent CT's verification tools directly. With the MCP server
-(`scripts/dvera-mcp.py`) connected, it can create the project, run analysis, generate and
-execute tests, and read coverage back without leaving the conversation - the same tools CT
-exposes to its own agent. Calls go to CT's `ct_tool.py` entry point, and the server keeps no
-process of its own between them.
-
-Connect it in one of two ways.
-
-**Point an MCP client at the interpreter CT already ships** - no extra install:
-
-```json
-{
-  "mcpServers": {
-    "dvera": {
-      "command": "C:/Program Files/Suresoft/CT 2026/python/python.exe",
-      "args": ["/path/to/dvera-plugin/scripts/dvera-mcp.py"]
-    }
-  }
-}
-```
-
-On Linux the interpreter is at `<CT install>/python/python3`. Any Python 3.8 or later works
-if you would rather use your own. Replace the script path with wherever this repository
-sits: clone it, or use the copy the plugin manager installed (`claude plugin list` shows
-where plugins live). The server takes the source directory from the client's working
-directory, so run the client from the project you want to verify.
-
-**Or install the bundle** from this repository's releases: download `dvera-mcp.mcpb` and
-open it with a client that installs MCP bundles. It resolves its own Python, so nothing has
-to be installed first.
-
-Set `CT_HOME` if CT is installed outside the default location. The server is safe to leave
-configured on any machine: it starts either way, and without CT it offers a single tool,
-`dvera_check_environment`, which reports what is missing and what to do about it. That tool
-is also there when CT is - run it first whenever the verification tools do not appear.
+The local MCP server is distributed separately from this Claude directory package.
+Use the [full repository's MCP setup instructions](https://github.com/SuresoftTechnologies/dvera-plugin/blob/main/README.md#mcp-tools)
+to configure it. The MCP server still requires a local CT installation and a valid CT license.
 
 ## Requirements for product-backed verification
 
@@ -138,7 +119,7 @@ For a product demo, purchase, or deployment consultation, contact [bizcenter@sur
 
 ## Privacy Policy
 
-The MCP server in this repository runs entirely on your machine.
+The optional MCP server in the [full source repository](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main) runs entirely on your machine. It is not included in this Claude directory package.
 
 - It sends nothing to Suresoft Technologies or to any third party. There is no telemetry,
   no analytics, and no network call of its own.
@@ -149,7 +130,11 @@ The MCP server in this repository runs entirely on your machine.
 - Anything CT itself records - workspaces, analysis output, reports - is governed by CT's own
   handling of that data, not by this repository.
 
-The Skills are documentation: they carry no code that runs on your machine.
+The Skills are Markdown instructions with no bundled programs; they direct your agent
+to call the separately installed CT. When your agent reads CT output, it may send source
+paths, function names, source code excerpts, test results, and coverage data to its AI
+provider under that provider's terms and privacy policy. The Skills package does not send
+this data to Suresoft Technologies.
 
 The full policy is in [PRIVACY.md](PRIVACY.md). Questions about data handling in the CT
 product itself go to
@@ -157,6 +142,6 @@ product itself go to
 
 ## License and trademarks
 
-This repository is licensed under the [MIT License](LICENSE). The license covers everything in this repository - the documentation, the Skill files, and the MCP server source. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.
+This repository is licensed under the [MIT License](LICENSE). The license covers the documentation and Skill files in this distribution. It does not cover CT itself: CT and DVERA are Suresoft Technologies products, and no product functionality or product licence is granted by this repository.
 
 GoogleTest is a trademark of Google LLC. This repository is not affiliated with, sponsored by, or endorsed by Google. Other product names may be trademarks of their respective owners.

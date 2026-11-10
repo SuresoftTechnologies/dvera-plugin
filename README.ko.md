@@ -29,9 +29,20 @@ DVERA가 CT의 검증 결과를 대체하지는 않습니다. 코딩 에이전�
 
 이 저장소의 Skill은 위 제품 연동 작업 흐름을 문서화합니다. CT 설치본을 대체하는 독립 도구는 아닙니다.
 
+## Claude 디렉터리 배포본
+
+이 Claude 디렉터리 배포본에는 DVERA Skills가 포함됩니다. CT 실행 환경과 선택 사항인 로컬 MCP
+서버는 포함하지 않습니다. 제품 기반 동작에는 별도로 설치된 CT 환경과 유효한 CT 라이선스가 필요합니다.
+
+[전체 소스 저장소](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)에서 선택 사항인
+로컬 MCP 서버와 MCP 번들 배포본도 제공합니다.
+
 ## 설치
 
-Claude Code에서:
+Skills 전용 패키지는 Claude 플러그인 디렉터리에서 DVERA를 설치해 사용합니다.
+아래 수동 설치 명령은 선택 사항인 로컬 MCP 서버 소스도 포함한 `main`의 전체 저장소를 설치합니다.
+
+전체 소스 저장소에서 수동으로 설치하려면 Claude Code에서 실행합니다:
 
 ```text
 /plugin marketplace add SuresoftTechnologies/dvera-plugin
@@ -85,45 +96,15 @@ CT 사용자 가이드의 트리거 예시입니다. 동일한 요청이라도 �
 
 ## 제품 연동 작업 흐름
 
-DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 저장소는 검증 작업 흐름을 문서화하고, 로컬에 설치된 CT로 도구 호출을 전달하는 MCP 서버를 함께 배포하지만, CT 실행 환경과 제품 설치는 포함하지 않습니다.
+DVERA는 CT와 DVERA가 구축된 환경에서 사용합니다. 이 Claude 디렉터리 배포본은 검증 작업 흐름을 문서화하고 Skills를 포함합니다. CT와 실행 환경은 별도로 설치해야 합니다.
 
 구축 전에는 이 저장소의 작업 흐름을 검토할 수 있지만, CT 동작이 필요한 Skill은 설치 확인에서 중단합니다. CT 분석·실행·커버리지 측정·보고가 수행됐다고 주장하지 않습니다.
 
-## MCP 도구
+## 선택 사항인 로컬 MCP 연결
 
-CT의 검증 도구를 에이전트에 그대로 넘깁니다. MCP 서버(`scripts/dvera-mcp.py`)를 연결하면
-프로젝트 생성, 분석 실행, 테스트 생성·실행, 커버리지 확인을 대화에서 벗어나지 않고 처리할 수
-있습니다. CT가 자체 에이전트에 제공하는 것과 같은 도구입니다. 호출은 CT의 `ct_tool.py`
-진입점으로 전달되며, 서버는 호출 사이에 자체 프로세스를 남기지 않습니다.
-
-두 가지 방법으로 연결합니다.
-
-**MCP 클라이언트가 CT 동봉 인터프리터를 쓰도록 설정** — 추가 설치가 없습니다:
-
-```json
-{
-  "mcpServers": {
-    "dvera": {
-      "command": "C:/Program Files/Suresoft/CT 2026/python/python.exe",
-      "args": ["/플러그인/경로/dvera-plugin/scripts/dvera-mcp.py"]
-    }
-  }
-}
-```
-
-Linux에서는 인터프리터가 `<CT 설치 경로>/python/python3`에 있습니다. 직접 준비한 Python을
-쓰려면 3.8 이상이면 됩니다. 스크립트 경로는 이 저장소가 있는 위치로 바꿔 주세요. 직접
-clone하거나, 플러그인 매니저가 설치한 사본을 쓰면 됩니다(`claude plugin list`가 위치를
-보여줍니다). 서버는 클라이언트의 작업 디렉터리를 소스 위치로 읽으므로, 검증할 프로젝트에서
-클라이언트를 실행해 주세요.
-
-**또는 번들 설치** — 이 저장소의 릴리스에서 `dvera-mcp.mcpb`를 내려받아 MCP 번들을 설치할 수
-있는 클라이언트로 엽니다. Python을 스스로 조달하므로 미리 설치할 것이 없습니다.
-
-CT를 기본 경로 밖에 설치했다면 `CT_HOME`을 설정해 주세요. 어느 환경에 설정해 두어도
-안전합니다. 서버는 어느 쪽이든 정상적으로 시작하며, CT가 없으면 `dvera_check_environment`
-도구 하나만 제공합니다. 이 도구는 무엇이 없고 무엇을 하면 되는지 알려주며, CT가 있을 때도
-그대로 있습니다. 검증 도구가 목록에 보이지 않으면 먼저 실행해 보세요.
+로컬 MCP 서버는 이 Claude 디렉터리 패키지와 별도로 배포합니다.
+[전체 저장소의 MCP 설정 안내(영문)](https://github.com/SuresoftTechnologies/dvera-plugin/blob/main/README.md#mcp-tools)에
+따라 연결할 수 있습니다. MCP 서버에도 로컬 CT 설치와 유효한 CT 라이선스가 필요합니다.
 
 ## 제품 기반 검증 요구사항
 
@@ -136,7 +117,7 @@ CT를 기본 경로 밖에 설치했다면 `CT_HOME`을 설정해 주세요. 어
 
 ## 개인정보 처리방침
 
-이 저장소의 MCP 서버는 전적으로 사용자 PC에서 동작합니다.
+[전체 소스 저장소](https://github.com/SuresoftTechnologies/dvera-plugin/tree/main)의 선택 사항인 MCP 서버는 전적으로 사용자 PC에서 동작합니다. 이 Claude 디렉터리 패키지에는 포함하지 않습니다.
 
 - Suresoft Technologies를 포함해 어디에도 데이터를 전송하지 않습니다. 자체 텔레메트리·분석·네트워크
   호출이 없습니다.
@@ -146,13 +127,17 @@ CT를 기본 경로 밖에 설치했다면 `CT_HOME`을 설정해 주세요. 어
 - CT가 자체적으로 남기는 것(워크스페이스, 분석 산출물, 보고서)은 이 저장소가 아니라 CT 제품의 데이터
   처리 방침을 따릅니다.
 
-Skill은 문서이며, 사용자 PC에서 실행되는 코드를 포함하지 않습니다.
+Skills는 별도 프로그램을 포함하지 않는 Markdown 지침입니다. 에이전트가 별도로 설치된 CT를
+호출하도록 안내합니다. 에이전트가 CT 출력을 읽으면 소스 경로, 함수명, 소스 코드 일부, 테스트
+결과와 커버리지 데이터를 사용 중인 AI 제공자에게 전달할 수 있습니다. 이 전송에는 해당 AI
+제공자의 약관과 개인정보 처리방침이 적용됩니다. Skills 패키지는 이 데이터를 Suresoft Technologies로
+전송하지 않습니다.
 
 전문은 [PRIVACY.md](PRIVACY.md)에 있습니다. CT 제품 자체의 데이터 처리에 대한 문의는
 [bizcenter@suresofttech.com](mailto:bizcenter@suresofttech.com)으로 주세요.
 
 ## 라이선스 및 상표
 
-이 저장소는 [MIT 라이선스](LICENSE)를 따릅니다. 라이선스는 이 저장소의 전부 — 문서, Skill 파일, MCP 서버 소스 — 에 적용됩니다. CT 자체에는 적용되지 않습니다. CT와 DVERA는 Suresoft Technologies의 제품이며, 이 저장소의 라이선스로 제품 기능이나 제품 라이선스가 제공되지는 않습니다.
+이 저장소는 [MIT 라이선스](LICENSE)를 따릅니다. 라이선스는 이 배포본의 문서와 Skill 파일에 적용됩니다. CT 자체에는 적용되지 않습니다. CT와 DVERA는 Suresoft Technologies의 제품이며, 이 저장소의 라이선스로 제품 기능이나 제품 라이선스가 제공되지는 않습니다.
 
 GoogleTest는 Google LLC의 상표입니다. 이 저장소는 Google과 제휴 관계에 있지 않으며 Google의 후원이나 승인을 받지 않았습니다. 그 밖의 제품명은 각 소유자의 상표일 수 있습니다.

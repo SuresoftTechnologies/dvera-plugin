@@ -1,7 +1,7 @@
 {
   "name": "dvera",
   "version": "0.1.5",
-  "description": "DVERA connects coding agents to CT for C/C++ unit and integration verification in functional-safety projects through MCP and Skills.",
+  "description": "DVERA Skills connect coding agents to CT for C/C++ unit and integration verification in functional-safety projects. CT is installed separately.",
   "author": {
     "name": "Suresoft Technologies",
     "email": "bizcenter@suresofttech.com",
@@ -10,5 +10,5 @@
   "repository": "https://github.com/SuresoftTechnologies/dvera-plugin",
   "homepage": "https://github.com/SuresoftTechnologies/dvera-plugin",
   "license": "MIT",
-  "keywords": ["functional-safety", "mcp", "dvera", "ct", "controller-tester", "suresoft", "c", "cpp", "embedded", "unit-testing", "integration-testing", "test-automation", "test-generation", "code-coverage", "mcdc", "mission-critical", "requirements-traceability", "regression-testing", "googletest", "iso-26262", "do-178c", "en-50128"]
+  "keywords": ["functional-safety", "dvera", "ct", "controller-tester", "suresoft", "c", "cpp", "embedded", "unit-testing", "integration-testing", "test-automation", "test-generation", "code-coverage", "mcdc", "mission-critical", "requirements-traceability", "regression-testing", "googletest", "iso-26262", "do-178c", "en-50128"]
 }
